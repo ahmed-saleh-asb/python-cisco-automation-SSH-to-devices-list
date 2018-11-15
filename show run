@@ -1,0 +1,25 @@
+import getpass
+import telnetlib
+import sys
+#install paramiko
+import paramiko
+import time
+
+username = "********"
+password = "********"
+#creat myswitches.txt and add your devicess ip address
+f = open("myswitches.txt")
+for line in f:
+    print "show run" + (line)
+    host = line.strip()
+    ssh_client = paramiko.SSHClient()
+    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+    ssh_client.connect(hostname=host, username=username, password=password)
+    #add show run or show cdp or show ip route
+    stdin, stdout, stderr = ssh_client.exec_command("show run")
+    output = stdout.readlines()
+    #output
+    #output will be show run + ip address.
+    file = open('show run' + host, 'w')
+    file.write(''.join(output))
+    file.close()
